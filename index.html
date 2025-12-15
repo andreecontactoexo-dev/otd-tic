@@ -5,129 +5,83 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lista de Deseos - Juego del Ángel 🎄</title>
 <style>
-  @keyframes snow {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-  }
-
-  @keyframes twinkle {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-
   body {
-    position: relative;
-    background: linear-gradient(135deg, #6B1212 0%, #4a0e0e 50%, #6B1212 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #fff8f0;
     margin: 0;
-    padding: 20px;
-    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #6B1212 0%, #4a0e0e 50%, #6B1212 100%);
+    color: #5C1B1B;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    flex-direction: column;
-    overflow-x: hidden;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 40px;
+    flex-wrap: nowrap;
   }
-
-  .snowflake {
-    position: fixed;
-    top: -10px;
-    color: white;
-    user-select: none;
-    pointer-events: none;
-    font-size: 1em;
-    animation-name: snow;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    z-index: 1;
+  /* Contenedores flexibles lado a lado para desktop */
+  .form-container, .list-container {
+    background: #FAEBD7;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(92, 27, 27, 0.5);
+    padding: 25px 30px;
+    box-sizing: border-box;
+    max-height: 90vh;
+    overflow-y: auto;
   }
-
-  .star {
-    position: fixed;
-    color: #FFD700;
-    user-select: none;
-    pointer-events: none;
-    font-size: 1.5em;
-    animation: twinkle 2s infinite;
-    z-index: 1;
+  .form-container {
+    width: 420px;
   }
-
-  .decoration {
-    position: fixed;
-    font-size: 2em;
-    user-select: none;
-    pointer-events: none;
-    animation: float 3s ease-in-out infinite;
-    z-index: 1;
-  }
-
-  .container {
-    background: #fff9f0;
-    padding: 30px 35px;
-    border-radius: 20px;
-    max-width: 520px;
-    width: 100%;
-    box-shadow: 0 0 25px #EDD4B590, 0 0 50px rgba(255, 215, 0, 0.3);
-    color: #6B1212;
+  .list-container {
+    width: 420px;
     border: 3px solid #AA3E3E;
-    transition: box-shadow 0.3s ease;
-    position: relative;
-    z-index: 10;
-  }
-  .container:hover {
-    box-shadow: 0 0 40px #AA3E3EBB, 0 0 60px rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 20px #AA3E3E99;
   }
   h1, h2 {
     text-align: center;
     color: #6B1212;
-    letter-spacing: 1.3px;
-    text-shadow: 0 0 8px #AA3E3E99;
-  }
-  h1::before {
-    content: "🎄 ";
-  }
-  h1::after {
-    content: " 🎅";
+    margin-bottom: 25px;
+    font-weight: 900;
   }
   label {
-    font-weight: 700;
     display: block;
+    font-weight: 700;
     margin-top: 15px;
     color: #6B1212;
   }
-  .optional-label {
-    font-weight: 400;
-    font-size: 0.9em;
-    color: #888;
-  }
-  input[type="text"], textarea, input[type="url"] {
+  input[type="text"], input[type="url"], textarea {
     width: 100%;
     padding: 12px 15px;
+    margin-top: 5px;
     border-radius: 10px;
-    border: 2px solid #EDD4B5;
-    background: #fffdfa;
-    color: #6B1212;
-    box-sizing: border-box;
+    border: 1.5px solid #ddbca6;
+    background: #fff7ed;
+    color: #5C1B1B;
     font-size: 1em;
     font-weight: 600;
-    transition: border-color 0.3s;
-    margin-top: 5px;
+    box-sizing: border-box;
   }
-  input[type="text"]:focus, textarea:focus, input[type="url"]:focus {
-    border-color: #AA3E3E;
+  input[type="text"]:focus, input[type="url"]:focus, textarea:focus {
     outline: none;
-    box-shadow: 0 0 8px #AA3E3E55;
+    border-color: #AA3E3E;
+    box-shadow: 0 0 8px #AA3E3E77;
   }
   textarea {
     resize: vertical;
   }
-  button {
+  .item-entry {
+    background: #f5e9db;
+    border: 1px solid #ddbca6;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-top: 15px;
+  }
+  .optional-label {
+    font-weight: 400;
+    font-size: 0.85em;
+    color: #855353;
+    margin-top: 5px;
+  }
+  button.submit-btn {
     margin-top: 20px;
     width: 100%;
     background-color: #AA3E3E;
@@ -139,84 +93,11 @@
     cursor: pointer;
     font-weight: 900;
     box-shadow: 0 0 18px #AA3E3EAA;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
-  button:hover {
+  button.submit-btn:hover {
     background-color: #800000;
     box-shadow: 0 0 25px #800000cc;
-    transform: scale(1.02);
-  }
-  button:active {
-    transform: scale(0.98);
-  }
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
-  .lista-deseos {
-    margin-top: 40px;
-    max-width: 650px;
-    width: 100%;
-    background: #EDD4B5;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 0 20px #6B1212CC;
-    max-height: 420px;
-    overflow-y: auto;
-    color: #6B1212;
-    border: 3px solid #AA3E3E;
-    position: relative;
-    z-index: 10;
-    margin-left: 0;
-    margin-right: auto;
-  }
-  .deseo-item {
-    border-bottom: 1.5px solid #AA3E3E;
-    padding: 15px 0;
-    font-size: 1.05em;
-    letter-spacing: 0.8px;
-  }
-  .deseo-item:last-child {
-    border-bottom: none;
-  }
-  .items-list {
-    margin-top: 8px;
-  }
-  .item-entry {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #f9f3e8;
-    border-radius: 10px;
-    border: 1px solid #EDD4B5;
-  }
-  .link-box {
-    margin-top: 10px;
-    padding: 10px;
-    background: #fff;
-    border: 2px solid #EDD4B5;
-    border-radius: 8px;
-    display: inline-block;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .link-box input[type="url"] {
-    border: none;
-    background: transparent;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    font-size: 1em;
-    font-weight: 600;
-  }
-  .link-box input[type="url"]:focus {
-    outline: none;
-    box-shadow: none;
-  }
-  .item-entry a {
-    color: #800000;
-    text-decoration: underline;
-    word-break: break-word;
   }
   .error {
     color: #AA0000;
@@ -226,41 +107,95 @@
     font-size: 1.1em;
     letter-spacing: 0.8px;
   }
+  .deseo-item {
+    border-bottom: 1.5px solid #AA3E3E;
+    padding: 15px 5px;
+    font-size: 1.05em;
+  }
+  .deseo-item:last-child {
+    border-bottom: none;
+  }
+  .items-list {
+    margin-top: 8px;
+  }
+  .items-list div {
+    margin-top: 6px;
+  }
+  .items-list a {
+    color: #AA3E3E;
+    text-decoration: underline;
+  }
   footer {
-    margin-top: 50px;
+    width: 100%;
+    max-width: 880px;
     text-align: center;
-    font-size: 0.95em;
-    color: #EDD4B5;
+    margin-top: 40px;
+    font-size: 0.9em;
+    color: #ddbca6;
     user-select: none;
-    letter-spacing: 0.7px;
-    position: relative;
-    z-index: 10;
+  }
+
+  /* Responsive para celular - apilar verticalmente */
+  @media (max-width: 900px) {
+    body {
+      flex-direction: column;
+      padding: 10px;
+      gap: 25px;
+    }
+    .form-container, .list-container {
+      width: 100% !important;
+      max-height: none;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+      padding: 15px;
+      background: #faf4eb;
+    }
+    button.submit-btn {
+      font-size: 1.1em;
+      padding: 12px;
+    }
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Juego del Ángel - Lista de Deseos</h1>
+<div class="form-container">
+  <h1>Deseos 🎅</h1>
   <form id="form-deseos" autocomplete="off">
     <label for="nombre">Tu Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Andrés" />
+    <input type="text" id="nombre" name="nombre" placeholder="Ej: Andrés" required/>
 
-    <label style="margin-top: 20px;">Lista hasta 3 Deseos:</label>
+    <label>Lista hasta 3 Deseos:</label>
 
-    <div id="items-container">
-      <!-- Ítems dinámicos -->
+    <div class="item-entry">
+      <label>Nombre del ítem #1:</label>
+      <input type="text" name="nombre-item" placeholder="Ej: Libro de ciencia ficción" required />
+      <label class="optional-label">Enlace de compra (opcional):</label>
+      <input type="url" name="link-item" placeholder="https://ejemplo.com/producto" />
     </div>
 
-    <button type="button" id="add-item">➕ Añadir un ítem</button>
+    <div class="item-entry">
+      <label>Nombre del ítem #2:</label>
+      <input type="text" name="nombre-item" placeholder="Ej: Libro de ciencia ficción" required />
+      <label class="optional-label">Enlace de compra (opcional):</label>
+      <input type="url" name="link-item" placeholder="https://ejemplo.com/producto" />
+    </div>
+
+    <div class="item-entry">
+      <label>Nombre del ítem #3:</label>
+      <input type="text" name="nombre-item" placeholder="Ej: Libro de ciencia ficción" required />
+      <label class="optional-label">Enlace de compra (opcional):</label>
+      <input type="url" name="link-item" placeholder="https://ejemplo.com/producto" />
+    </div>
+
+    <button class="submit-btn" type="submit">Enviar Deseos</button>
 
     <div class="error" id="error-msg" style="display:none;"></div>
-
-    <button type="submit">Enviar Deseos</button>
   </form>
 </div>
 
-<div class="lista-deseos">
+<div class="list-container">
   <h2>🎁 Deseos Enviados 🎁</h2>
   <div id="lista"></div>
 </div>
@@ -289,46 +224,17 @@
   const deseosRef = collection(db, "deseos");
   const lista = document.getElementById("lista");
   const form = document.getElementById("form-deseos");
-  const itemsContainer = document.getElementById("items-container");
-  const addItemBtn = document.getElementById("add-item");
   const errorMsg = document.getElementById("error-msg");
 
-  let itemCount = 0;
-  const MAX_ITEMS = 3;
-
-  function crearItemEntry(id) {
-    const div = document.createElement("div");
-    div.className = "item-entry";
-    div.id = `item-${id}`;
-    div.innerHTML = `
-      <label>Nombre del ítem #${id + 1}:</label>
-      <input type="text" name="nombre-item" placeholder="Ej: Libro de ciencia ficción" required />
-      
-      <label class="optional-label">Enlace de compra (opcional):</label>
-      <div class="link-box">
-        <input type="url" name="link-item" placeholder="https://ejemplo.com/producto" />
-      </div>
-    `;
-    return div;
-  }
-
-  function actualizarBotonAdd() {
-    addItemBtn.disabled = itemCount >= MAX_ITEMS;
-  }
-
-  function init() {
-    itemsContainer.appendChild(crearItemEntry(0));
-    itemCount = 1;
-    actualizarBotonAdd();
-  }
-
-  addItemBtn.addEventListener("click", () => {
-    if (itemCount < MAX_ITEMS) {
-      itemsContainer.appendChild(crearItemEntry(itemCount));
-      itemCount++;
-      actualizarBotonAdd();
+  function validateUrl(url) {
+    if (!url) return true;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
-  });
+  }
 
   onSnapshot(deseosRef, (snapshot) => {
     lista.innerHTML = "";
@@ -364,26 +270,17 @@
     const itemNombres = [...form.querySelectorAll('input[name="nombre-item"]')].map(i => i.value.trim());
     const itemLinks = [...form.querySelectorAll('input[name="link-item"]')].map(i => i.value.trim());
 
-    if (itemNombres.length === 0 || itemNombres.length > MAX_ITEMS) {
-      errorMsg.textContent = `Debes ingresar entre 1 y ${MAX_ITEMS} ítems.`;
+    if (itemNombres.some(name => !name)) {
+      errorMsg.textContent = "El nombre de cada ítem es obligatorio.";
       errorMsg.style.display = "block";
       return;
     }
 
-    for (let i = 0; i < itemNombres.length; i++) {
-      if (!itemNombres[i]) {
-        errorMsg.textContent = "El nombre de cada ítem es obligatorio.";
+    for (let link of itemLinks) {
+      if (!validateUrl(link)) {
+        errorMsg.textContent = `Una de las URLs es inválida: ${link}`;
         errorMsg.style.display = "block";
         return;
-      }
-      if (itemLinks[i]) {
-        try {
-          new URL(itemLinks[i]);
-        } catch {
-          errorMsg.textContent = `El enlace "${itemLinks[i]}" no es una URL válida.`;
-          errorMsg.style.display = "block";
-          return;
-        }
       }
     }
 
@@ -399,75 +296,14 @@
         fecha: new Date().toLocaleString()
       });
       form.reset();
-      itemsContainer.innerHTML = "";
-      itemCount = 0;
-      init();
+      errorMsg.style.display = "none";
     } catch (error) {
       console.error("Error al enviar deseo:", error);
-      errorMsg.textContent = "Error al enviar, intentalo nuevamente.";
+      errorMsg.textContent = "Error al enviar, intenta nuevamente.";
       errorMsg.style.display = "block";
     }
   });
-
-  init();
-
-  // Animaciones navideñas
-  function createSnowflake() {
-    const snowflake = document.createElement('div');
-    snowflake.className = 'snowflake';
-    snowflake.style.left = Math.random() * 100 + 'vw';
-    snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
-    snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
-    snowflake.style.opacity = Math.random();
-    snowflake.style.animationDelay = (Math.random() * 10) + 's';
-    snowflake.textContent = '❄';
-    document.body.appendChild(snowflake);
-
-    setTimeout(() => {
-      snowflake.remove();
-      createSnowflake();
-    }, (parseFloat(snowflake.style.animationDuration) + parseFloat(snowflake.style.animationDelay)) * 1000);
-  }
-
-  for(let i=0; i<50; i++) createSnowflake();
-
-  // Estrellas parpadeantes
-  function createStar() {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.style.left = Math.random() * 100 + 'vw';
-    star.style.top = Math.random() * 100 + 'vh';
-    star.style.animationDelay = (Math.random() * 5) + 's';
-    star.textContent = '⭐';
-    document.body.appendChild(star);
-
-    setTimeout(() => {
-      star.remove();
-      createStar();
-    }, 5000);
-  }
-
-  for(let i=0; i<20; i++) createStar();
-
-  // Decoraciones flotantes
-  function createDecoration() {
-    const decoration = document.createElement('div');
-    decoration.className = 'decoration';
-    decoration.style.left = Math.random() * 100 + 'vw';
-    decoration.style.top = Math.random() * 100 + 'vh';
-    decoration.style.animationDelay = (Math.random() * 10) + 's';
-    decoration.textContent = ['🎄', '🎅', '🎁', '❄'][Math.floor(Math.random() * 4)];
-    document.body.appendChild(decoration);
-
-    setTimeout(() => {
-      decoration.remove();
-      createDecoration();
-    }, 10000);
-  }
-
-  for(let i=0; i<10; i++) createDecoration();
 </script>
 
 </body>
 </html>
-
