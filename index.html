@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Deseos para el Juego del Ángel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .lista-deseos {
+            max-width: 400px;
+            width: 100%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .deseo-item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        .deseo-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Deseos para el Juego del Ángel</h1>
+        <p>¡Hola! Escribe tu nombre y tus deseos. Se agregarán automáticamente abajo y serán visibles para todos en tiempo real.</p>
+        <form id="form-deseos">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            
+            <label for="deseos">Deseos o ideas de regalos:</label>
+            <textarea id="deseos" name="deseos" rows="5" placeholder="Ej: Un libro de ciencia ficción, chocolates, una taza personalizada..." required></textarea>
+            
+            <button type="submit">Enviar Deseos</button>
+        </form>
+    </div>
+    
+    <div class="lista-deseos">
+        <h2>Deseos Enviados (Compartidos):</h2>
+        <div id="lista"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Configuración de Firebase (REEMPLAZA CON TU CONFIGURACIÓN)
+        const firebaseConfig = {TU_CONFIGURACION_FIREBASE};
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Referencia a la colección de deseos
+        const deseosRef = collection(db, 'deseos');
+
+        // Escuchar cambios en tiempo real
+        onSnapshot(deseosRef, (snapshot) => {
+            const lista = document.getElementById('lista');
+            lista.innerHTML = ''; // Limpiar lista
+            
+            if (snapshot.empty) {
+                lista.innerHTML = '<p>Aún no hay deseos enviados.</p>';
+                return;
+            }
+            
+            snapshot.forEach((doc) => {
+                const deseo = doc.data();
+                const item = document.createElement('div');
+                item.className = 'deseo-item';
+                item.innerHTML = `<strong>${deseo.nombre}</strong> (${deseo.fecha}): ${deseo.deseos}`;
+                lista.appendChild(item);
+            });
+        });
+
+        // Manejar el envío del formulario
+        document.getElementById('form-deseos').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitar recarga
+            
+            const nombre = document.getElementById('nombre').value;
+            const deseos = document.getElementById('deseos').value;
+            
+            // Agregar a Firestore
+            try {
+                await addDoc(deseosRef, {
+                    nombre: nombre,
+                    deseos: deseos,
+                    fecha: new Date().toLocaleString()
+                });
+                // Limpiar formulario
+                document.getElementById('form-deseos').reset();
+            } catch (error) {
+                console.error("Error al agregar deseo: ", error);
+                alert("Error al enviar. Inténtalo de nuevo.");
+            }
+        });
+    </script>
+</body>
+</html>
