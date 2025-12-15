@@ -1,159 +1,158 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lista de Deseos para el Juego del Ángel</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .lista-deseos {
-            max-width: 400px;
-            width: 100%;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .deseo-item {
-            border-bottom: 1px solid #eee;
-            padding: 10px 0;
-        }
-        .deseo-item:last-child {
-            border-bottom: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lista de Deseos para el Juego del Ángel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      margin-top: 6px;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .lista-deseos {
+      background: white;
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .deseo-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .deseo-item:last-child {
+      border-bottom: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Lista de Deseos para el Juego del Ángel</h1>
-        <p>¡Hola! Escribe tu nombre y tus deseos. Se agregarán automáticamente abajo y serán visibles para todos en tiempo real.</p>
-        <form id="form-deseos">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required />
-            
-            <label for="deseos">Deseos o ideas de regalos:</label>
-            <textarea id="deseos" name="deseos" rows="5" placeholder="Ej: Un libro de ciencia ficción, chocolates, una taza personalizada..." required></textarea>
-            
-            <button type="submit">Enviar Deseos</button>
-        </form>
-    </div>
-    
-    <div class="lista-deseos">
-        <h2>Deseos Enviados (Compartidos):</h2>
-        <div id="lista"></div>
-    </div>
 
-    <!-- Firebase SDK con imports CDN (únicos y limpios) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
+  <div class="container">
+    <h1>Lista de Deseos para el Juego del Ángel</h1>
+    <form id="form-deseos">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required />
 
-        // Tu configuración Firebase
-        const firebaseConfig = {
-          apiKey: "AIzaSyBf71vQprQBT-n75-WrBJ4gLHjRTBbW_DE",
-          authDomain: "juegoangeloficina.firebaseapp.com",
-          projectId: "juegoangeloficina",
-          storageBucket: "juegoangeloficina.firebasestorage.app",
-          messagingSenderId: "397796758996",
-          appId: "1:397796758996:web:be0a63eb1a7d10a93f3241",
-          measurementId: "G-FZ3XLFVTT3"
-        };
+      <label for="deseos">Deseos o ideas de regalos:</label>
+      <textarea id="deseos" name="deseos" rows="5" placeholder="Ej: Un libro, chocolates..." required></textarea>
 
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
+      <button type="submit">Enviar Deseos</button>
+    </form>
+  </div>
 
-        const deseosRef = collection(db, 'deseos');
-        const lista = document.getElementById('lista');
+  <div class="lista-deseos">
+    <h2>Deseos enviados:</h2>
+    <div id="lista"></div>
+  </div>
 
-        // Escuchar base de datos en tiempo real y mostrar lista
-        onSnapshot(deseosRef, (snapshot) => {
-            lista.innerHTML = '';
-            if (snapshot.empty) {
-                lista.innerHTML = '<p>Aún no hay deseos enviados.</p>';
-                return;
-            }
-            snapshot.forEach(doc => {
-                const d = doc.data();
-                const item = document.createElement('div');
-                item.className = 'deseo-item';
-                item.innerHTML = `<strong>${d.nombre}</strong> (${d.fecha}): ${d.deseos}`;
-                lista.appendChild(item);
-            });
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBf71vQprQBT-n75-WrBJ4gLHjRTBbW_DE",
+      authDomain: "juegoangeloficina.firebaseapp.com",
+      projectId: "juegoangeloficina",
+      storageBucket: "juegoangeloficina.firebasestorage.app",
+      messagingSenderId: "397796758996",
+      appId: "1:397796758996:web:be0a63eb1a7d10a93f3241",
+      measurementId: "G-FZ3XLFVTT3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);  // Opcional, si no quieres analytics puedes eliminar esta línea
+    const db = getFirestore(app);
+
+    const deseosRef = collection(db, "deseos");
+    const lista = document.getElementById("lista");
+
+    onSnapshot(deseosRef, (snapshot) => {
+      lista.innerHTML = "";
+      if (snapshot.empty) {
+        lista.innerHTML = "<p>Aún no hay deseos enviados.</p>";
+        return;
+      }
+      snapshot.forEach((doc) => {
+        const d = doc.data();
+        const div = document.createElement("div");
+        div.className = "deseo-item";
+        div.innerHTML = `<strong>${d.nombre}</strong> (${d.fecha}): ${d.deseos}`;
+        lista.appendChild(div);
+      });
+    });
+
+    document.getElementById("form-deseos").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value.trim();
+      const deseos = document.getElementById("deseos").value.trim();
+
+      if (!nombre || !deseos) {
+        alert("Por favor completa todos los campos.");
+        return;
+      }
+
+      try {
+        await addDoc(deseosRef, {
+          nombre,
+          deseos,
+          fecha: new Date().toLocaleString(),
         });
-
-        // Enviar nuevo deseo
-        document.getElementById('form-deseos').addEventListener('submit', async (ev) => {
-            ev.preventDefault();
-            const nombre = document.getElementById('nombre').value.trim();
-            const deseos = document.getElementById('deseos').value.trim();
-
-            if (!nombre || !deseos) {
-                alert('Por favor, completa ambos campos.');
-                return;
-            }
-            try {
-                await addDoc(deseosRef, {
-                    nombre,
-                    deseos,
-                    fecha: new Date().toLocaleString()
-                });
-                ev.target.reset();
-            } catch(error) {
-                console.error("Error al enviar deseo:", error);
-                alert('Error al enviar el deseo. Intenta de nuevo.');
-            }
-        });
-
-    </script>
+        e.target.reset();
+      } catch (error) {
+        console.error("Error enviando deseo:", error);
+        alert("Error al enviar el deseo, intenta nuevamente.");
+      }
+    });
+  </script>
 </body>
 </html>
