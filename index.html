@@ -1,158 +1,473 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lista de Deseos para el Juego del Ángel</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-    input, textarea {
-      width: 100%;
-      margin-top: 6px;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    button {
-      margin-top: 15px;
-      width: 100%;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      padding: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .lista-deseos {
-      background: white;
-      max-width: 400px;
-      width: 100%;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .deseo-item {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
-    }
-    .deseo-item:last-child {
-      border-bottom: none;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lista de Deseos - Juego del Ángel 🎄</title>
+<style>
+  @keyframes snow {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  body {
+    position: relative;
+    background: linear-gradient(135deg, #6B1212 0%, #4a0e0e 50%, #6B1212 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff8f0;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    user-select: none;
+    pointer-events: none;
+    font-size: 1em;
+    animation-name: snow;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    z-index: 1;
+  }
+
+  .star {
+    position: fixed;
+    color: #FFD700;
+    user-select: none;
+    pointer-events: none;
+    font-size: 1.5em;
+    animation: twinkle 2s infinite;
+    z-index: 1;
+  }
+
+  .decoration {
+    position: fixed;
+    font-size: 2em;
+    user-select: none;
+    pointer-events: none;
+    animation: float 3s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  .container {
+    background: #fff9f0;
+    padding: 30px 35px;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 0 25px #EDD4B590, 0 0 50px rgba(255, 215, 0, 0.3);
+    color: #6B1212;
+    border: 3px solid #AA3E3E;
+    transition: box-shadow 0.3s ease;
+    position: relative;
+    z-index: 10;
+  }
+  .container:hover {
+    box-shadow: 0 0 40px #AA3E3EBB, 0 0 60px rgba(255, 215, 0, 0.5);
+  }
+  h1, h2 {
+    text-align: center;
+    color: #6B1212;
+    letter-spacing: 1.3px;
+    text-shadow: 0 0 8px #AA3E3E99;
+  }
+  h1::before {
+    content: "🎄 ";
+  }
+  h1::after {
+    content: " 🎅";
+  }
+  label {
+    font-weight: 700;
+    display: block;
+    margin-top: 15px;
+    color: #6B1212;
+  }
+  .optional-label {
+    font-weight: 400;
+    font-size: 0.9em;
+    color: #888;
+  }
+  input[type="text"], textarea, input[type="url"] {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px solid #EDD4B5;
+    background: #fffdfa;
+    color: #6B1212;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-weight: 600;
+    transition: border-color 0.3s;
+    margin-top: 5px;
+  }
+  input[type="text"]:focus, textarea:focus, input[type="url"]:focus {
+    border-color: #AA3E3E;
+    outline: none;
+    box-shadow: 0 0 8px #AA3E3E55;
+  }
+  textarea {
+    resize: vertical;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    background-color: #AA3E3E;
+    border: none;
+    color: #fff9f0;
+    padding: 15px;
+    font-size: 1.3em;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 900;
+    box-shadow: 0 0 18px #AA3E3EAA;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  button:hover {
+    background-color: #800000;
+    box-shadow: 0 0 25px #800000cc;
+    transform: scale(1.02);
+  }
+  button:active {
+    transform: scale(0.98);
+  }
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .lista-deseos {
+    margin-top: 40px;
+    max-width: 650px;
+    width: 100%;
+    background: #EDD4B5;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 0 20px #6B1212CC;
+    max-height: 420px;
+    overflow-y: auto;
+    color: #6B1212;
+    border: 3px solid #AA3E3E;
+    position: relative;
+    z-index: 10;
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .deseo-item {
+    border-bottom: 1.5px solid #AA3E3E;
+    padding: 15px 0;
+    font-size: 1.05em;
+    letter-spacing: 0.8px;
+  }
+  .deseo-item:last-child {
+    border-bottom: none;
+  }
+  .items-list {
+    margin-top: 8px;
+  }
+  .item-entry {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f3e8;
+    border-radius: 10px;
+    border: 1px solid #EDD4B5;
+  }
+  .link-box {
+    margin-top: 10px;
+    padding: 10px;
+    background: #fff;
+    border: 2px solid #EDD4B5;
+    border-radius: 8px;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .link-box input[type="url"] {
+    border: none;
+    background: transparent;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+    font-weight: 600;
+  }
+  .link-box input[type="url"]:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .item-entry a {
+    color: #800000;
+    text-decoration: underline;
+    word-break: break-word;
+  }
+  .error {
+    color: #AA0000;
+    font-weight: 700;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 1.1em;
+    letter-spacing: 0.8px;
+  }
+  footer {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0.95em;
+    color: #EDD4B5;
+    user-select: none;
+    letter-spacing: 0.7px;
+    position: relative;
+    z-index: 10;
+  }
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Lista de Deseos para el Juego del Ángel</h1>
-    <form id="form-deseos">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" name="nombre" required />
+<div class="container">
+  <h1>Juego del Ángel - Lista de Deseos</h1>
+  <form id="form-deseos" autocomplete="off">
+    <label for="nombre">Tu Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Andrés" />
 
-      <label for="deseos">Deseos o ideas de regalos:</label>
-      <textarea id="deseos" name="deseos" rows="5" placeholder="Ej: Un libro, chocolates..." required></textarea>
+    <label style="margin-top: 20px;">Lista hasta 3 Deseos:</label>
 
-      <button type="submit">Enviar Deseos</button>
-    </form>
-  </div>
+    <div id="items-container">
+      <!-- Ítems dinámicos -->
+    </div>
 
-  <div class="lista-deseos">
-    <h2>Deseos enviados:</h2>
-    <div id="lista"></div>
-  </div>
+    <button type="button" id="add-item">➕ Añadir un ítem</button>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
+    <div class="error" id="error-msg" style="display:none;"></div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBf71vQprQBT-n75-WrBJ4gLHjRTBbW_DE",
-      authDomain: "juegoangeloficina.firebaseapp.com",
-      projectId: "juegoangeloficina",
-      storageBucket: "juegoangeloficina.firebasestorage.app",
-      messagingSenderId: "397796758996",
-      appId: "1:397796758996:web:be0a63eb1a7d10a93f3241",
-      measurementId: "G-FZ3XLFVTT3"
-    };
+    <button type="submit">Enviar Deseos</button>
+  </form>
+</div>
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);  // Opcional, si no quieres analytics puedes eliminar esta línea
-    const db = getFirestore(app);
+<div class="lista-deseos">
+  <h2>🎁 Deseos Enviados 🎁</h2>
+  <div id="lista"></div>
+</div>
 
-    const deseosRef = collection(db, "deseos");
-    const lista = document.getElementById("lista");
+<footer>Todos los derechos reservados © otd-tic-andrexo</footer>
 
-    onSnapshot(deseosRef, (snapshot) => {
-      lista.innerHTML = "";
-      if (snapshot.empty) {
-        lista.innerHTML = "<p>Aún no hay deseos enviados.</p>";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBf71vQprQBT-n75-WrBJ4gLHjRTBbW_DE",
+    authDomain: "juegoangeloficina.firebaseapp.com",
+    projectId: "juegoangeloficina",
+    storageBucket: "juegoangeloficina.firebasestorage.app",
+    messagingSenderId: "397796758996",
+    appId: "1:397796758996:web:be0a63eb1a7d10a93f3241",
+    measurementId: "G-FZ3XLFVTT3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  const deseosRef = collection(db, "deseos");
+  const lista = document.getElementById("lista");
+  const form = document.getElementById("form-deseos");
+  const itemsContainer = document.getElementById("items-container");
+  const addItemBtn = document.getElementById("add-item");
+  const errorMsg = document.getElementById("error-msg");
+
+  let itemCount = 0;
+  const MAX_ITEMS = 3;
+
+  function crearItemEntry(id) {
+    const div = document.createElement("div");
+    div.className = "item-entry";
+    div.id = `item-${id}`;
+    div.innerHTML = `
+      <label>Nombre del ítem #${id + 1}:</label>
+      <input type="text" name="nombre-item" placeholder="Ej: Libro de ciencia ficción" required />
+      
+      <label class="optional-label">Enlace de compra (opcional):</label>
+      <div class="link-box">
+        <input type="url" name="link-item" placeholder="https://ejemplo.com/producto" />
+      </div>
+    `;
+    return div;
+  }
+
+  function actualizarBotonAdd() {
+    addItemBtn.disabled = itemCount >= MAX_ITEMS;
+  }
+
+  function init() {
+    itemsContainer.appendChild(crearItemEntry(0));
+    itemCount = 1;
+    actualizarBotonAdd();
+  }
+
+  addItemBtn.addEventListener("click", () => {
+    if (itemCount < MAX_ITEMS) {
+      itemsContainer.appendChild(crearItemEntry(itemCount));
+      itemCount++;
+      actualizarBotonAdd();
+    }
+  });
+
+  onSnapshot(deseosRef, (snapshot) => {
+    lista.innerHTML = "";
+    if (snapshot.empty) {
+      lista.innerHTML = "<p>No hay deseos enviados aún.</p>";
+      return;
+    }
+    snapshot.forEach((doc) => {
+      const d = doc.data();
+      const div = document.createElement("div");
+      div.className = "deseo-item";
+
+      let itemsHTML = '<div class="items-list">';
+      for (let item of d.items) {
+        itemsHTML += `<div>- <strong>${item.nombre}</strong>`;
+        if (item.link) {
+          itemsHTML += `: <a href="${item.link}" target="_blank" rel="noopener noreferrer">Ver enlace</a>`;
+        }
+        itemsHTML += `</div>`;
+      }
+      itemsHTML += "</div>";
+
+      div.innerHTML = `<strong>${d.nombre}</strong> (${d.fecha}): ${itemsHTML}`;
+      lista.appendChild(div);
+    });
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorMsg.style.display = "none";
+
+    const nombre = form.nombre.value.trim();
+    const itemNombres = [...form.querySelectorAll('input[name="nombre-item"]')].map(i => i.value.trim());
+    const itemLinks = [...form.querySelectorAll('input[name="link-item"]')].map(i => i.value.trim());
+
+    if (itemNombres.length === 0 || itemNombres.length > MAX_ITEMS) {
+      errorMsg.textContent = `Debes ingresar entre 1 y ${MAX_ITEMS} ítems.`;
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    for (let i = 0; i < itemNombres.length; i++) {
+      if (!itemNombres[i]) {
+        errorMsg.textContent = "El nombre de cada ítem es obligatorio.";
+        errorMsg.style.display = "block";
         return;
       }
-      snapshot.forEach((doc) => {
-        const d = doc.data();
-        const div = document.createElement("div");
-        div.className = "deseo-item";
-        div.innerHTML = `<strong>${d.nombre}</strong> (${d.fecha}): ${d.deseos}`;
-        lista.appendChild(div);
+      if (itemLinks[i]) {
+        try {
+          new URL(itemLinks[i]);
+        } catch {
+          errorMsg.textContent = `El enlace "${itemLinks[i]}" no es una URL válida.`;
+          errorMsg.style.display = "block";
+          return;
+        }
+      }
+    }
+
+    const items = itemNombres.map((nombreItem, idx) => ({
+      nombre: nombreItem,
+      link: itemLinks[idx] || ''
+    }));
+
+    try {
+      await addDoc(deseosRef, {
+        nombre,
+        items,
+        fecha: new Date().toLocaleString()
       });
-    });
+      form.reset();
+      itemsContainer.innerHTML = "";
+      itemCount = 0;
+      init();
+    } catch (error) {
+      console.error("Error al enviar deseo:", error);
+      errorMsg.textContent = "Error al enviar, intentalo nuevamente.";
+      errorMsg.style.display = "block";
+    }
+  });
 
-    document.getElementById("form-deseos").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const nombre = document.getElementById("nombre").value.trim();
-      const deseos = document.getElementById("deseos").value.trim();
+  init();
 
-      if (!nombre || !deseos) {
-        alert("Por favor completa todos los campos.");
-        return;
-      }
+  // Animaciones navideñas
+  function createSnowflake() {
+    const snowflake = document.createElement('div');
+    snowflake.className = 'snowflake';
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    snowflake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+    snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's';
+    snowflake.style.opacity = Math.random();
+    snowflake.style.animationDelay = (Math.random() * 10) + 's';
+    snowflake.textContent = '❄';
+    document.body.appendChild(snowflake);
 
-      try {
-        await addDoc(deseosRef, {
-          nombre,
-          deseos,
-          fecha: new Date().toLocaleString(),
-        });
-        e.target.reset();
-      } catch (error) {
-        console.error("Error enviando deseo:", error);
-        alert("Error al enviar el deseo, intenta nuevamente.");
-      }
-    });
-  </script>
+    setTimeout(() => {
+      snowflake.remove();
+      createSnowflake();
+    }, (parseFloat(snowflake.style.animationDuration) + parseFloat(snowflake.style.animationDelay)) * 1000);
+  }
+
+  for(let i=0; i<50; i++) createSnowflake();
+
+  // Estrellas parpadeantes
+  function createStar() {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + 'vw';
+    star.style.top = Math.random() * 100 + 'vh';
+    star.style.animationDelay = (Math.random() * 5) + 's';
+    star.textContent = '⭐';
+    document.body.appendChild(star);
+
+    setTimeout(() => {
+      star.remove();
+      createStar();
+    }, 5000);
+  }
+
+  for(let i=0; i<20; i++) createStar();
+
+  // Decoraciones flotantes
+  function createDecoration() {
+    const decoration = document.createElement('div');
+    decoration.className = 'decoration';
+    decoration.style.left = Math.random() * 100 + 'vw';
+    decoration.style.top = Math.random() * 100 + 'vh';
+    decoration.style.animationDelay = (Math.random() * 10) + 's';
+    decoration.textContent = ['🎄', '🎅', '🎁', '❄'][Math.floor(Math.random() * 4)];
+    document.body.appendChild(decoration);
+
+    setTimeout(() => {
+      decoration.remove();
+      createDecoration();
+    }, 10000);
+  }
+
+  for(let i=0; i<10; i++) createDecoration();
+</script>
+
 </body>
 </html>
+
