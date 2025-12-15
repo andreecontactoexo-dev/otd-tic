@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lista de Deseos para el Juego del Ángel</title>
     <style>
         body {
@@ -77,7 +77,7 @@
         <p>¡Hola! Escribe tu nombre y tus deseos. Se agregarán automáticamente abajo y serán visibles para todos en tiempo real.</p>
         <form id="form-deseos">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" name="nombre" required />
             
             <label for="deseos">Deseos o ideas de regalos:</label>
             <textarea id="deseos" name="deseos" rows="5" placeholder="Ej: Un libro de ciencia ficción, chocolates, una taza personalizada..." required></textarea>
@@ -91,61 +91,69 @@
         <div id="lista"></div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK con imports CDN (únicos y limpios) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
 
-        // Configuración de Firebase (REEMPLAZA CON TU CONFIGURACIÓN)
-        const firebaseConfig = {TU_CONFIGURACION_FIREBASE};
+        // Tu configuración Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyBf71vQprQBT-n75-WrBJ4gLHjRTBbW_DE",
+          authDomain: "juegoangeloficina.firebaseapp.com",
+          projectId: "juegoangeloficina",
+          storageBucket: "juegoangeloficina.firebasestorage.app",
+          messagingSenderId: "397796758996",
+          appId: "1:397796758996:web:be0a63eb1a7d10a93f3241",
+          measurementId: "G-FZ3XLFVTT3"
+        };
 
-        // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
-        // Referencia a la colección de deseos
         const deseosRef = collection(db, 'deseos');
+        const lista = document.getElementById('lista');
 
-        // Escuchar cambios en tiempo real
+        // Escuchar base de datos en tiempo real y mostrar lista
         onSnapshot(deseosRef, (snapshot) => {
-            const lista = document.getElementById('lista');
-            lista.innerHTML = ''; // Limpiar lista
-            
+            lista.innerHTML = '';
             if (snapshot.empty) {
                 lista.innerHTML = '<p>Aún no hay deseos enviados.</p>';
                 return;
             }
-            
-            snapshot.forEach((doc) => {
-                const deseo = doc.data();
+            snapshot.forEach(doc => {
+                const d = doc.data();
                 const item = document.createElement('div');
                 item.className = 'deseo-item';
-                item.innerHTML = `<strong>${deseo.nombre}</strong> (${deseo.fecha}): ${deseo.deseos}`;
+                item.innerHTML = `<strong>${d.nombre}</strong> (${d.fecha}): ${d.deseos}`;
                 lista.appendChild(item);
             });
         });
 
-        // Manejar el envío del formulario
-        document.getElementById('form-deseos').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Evitar recarga
-            
-            const nombre = document.getElementById('nombre').value;
-            const deseos = document.getElementById('deseos').value;
-            
-            // Agregar a Firestore
+        // Enviar nuevo deseo
+        document.getElementById('form-deseos').addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+            const nombre = document.getElementById('nombre').value.trim();
+            const deseos = document.getElementById('deseos').value.trim();
+
+            if (!nombre || !deseos) {
+                alert('Por favor, completa ambos campos.');
+                return;
+            }
             try {
                 await addDoc(deseosRef, {
-                    nombre: nombre,
-                    deseos: deseos,
+                    nombre,
+                    deseos,
                     fecha: new Date().toLocaleString()
                 });
-                // Limpiar formulario
-                document.getElementById('form-deseos').reset();
-            } catch (error) {
-                console.error("Error al agregar deseo: ", error);
-                alert("Error al enviar. Inténtalo de nuevo.");
+                ev.target.reset();
+            } catch(error) {
+                console.error("Error al enviar deseo:", error);
+                alert('Error al enviar el deseo. Intenta de nuevo.');
             }
         });
+
     </script>
 </body>
 </html>
